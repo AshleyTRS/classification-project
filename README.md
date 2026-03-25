@@ -10,10 +10,10 @@ The system is designed to support unsupervised learning tasks, where inherent st
 
 The pipeline is organized into multiple stages:
 
-1. Data Preprocessing: Cleaning, normalization, and transformation of raw data
-2. Feature Preparation: Structuring the dataset for unsupervised learning
-3. Clustering: Application of multiple clustering algorithms
-4. Evaluation: Quantitative assessment using clustering validation metrics
+1. Feature Preparation: Structuring the dataset for unsupervised learning (removes class labels)
+2. Data Preprocessing: Cleaning, normalization, and transformation of raw data to reduce the impact of noise and aid in group classification for distance-based clustering algorithms
+3. Clustering: Application of multiple clustering algorithms (K-Means, Agglomerative Clustering, and DBSCAN)
+4. Evaluation: Quantitative assessment using clustering validation metrics (CS-Index, DB-index, and )
 5. Visualization and Analysis: Interpretation of discovered patterns
 
 The project follows a modular architecture to ensure reproducibility, clarity, and separation of concerns across all stages of the data mining workflow.
@@ -55,7 +55,7 @@ However, to make the dataset more realistic the three classes that a clustering 
 
 In these class definitions *xₘ* is a 21-attribute vector that represents a point in the dataset beloging to class *i*, *u* is a random mixing coefficient that has a value in the interval [0, 1], and m is the index of the attribute or the position at which the waveform was sampled (m = 1, 2, ..., 21), and ε~m~ is random noise added to attribute m, which is calculated from a normal distribution with a mean of 0 and a variance of 1. The purpose of the noise is to distort the waveform slightly. Does the noise bias the data? No, it does not because on average noise is 0 and noise strenght is consistent across data due to the variance value of 1.
 
-Thus, class 1 objects are a mix of h~1~(t) and h~2~(t) waveforms and noise. Class 2 objects are a mix of h~1~(t) and h~3~(t) waveforms and noise. Class 3 objects are a mix of h~2~(t) and h~3~(t) waveforms and noise. In other words each waveform sample in the dataset is a superposition of two prototype waveforms and noise. These classes are shown in Figure 2.
+Thus, class 1 objects are a mix of h~1~(t) and h~2~(t) waveforms and noise. Class 2 objects are a mix of h~1~(t) and h~3~(t) waveforms and noise. Class 3 objects are a mix of h~2~(t) and h~3~(t) waveforms and noise. In other words, each waveform sample in the dataset is a superposition of two prototype waveforms and noise. These classes are shown in Figure 2.
 
 ### Figure 2: Waveform Classes
 
@@ -119,24 +119,45 @@ pip install -r requirements.txt
 ## Project Structure
 
 ```bash
-data/
-  ├── raw/               Original dataset
-  └── preprocessed/      Cleaned and transformed data
+classification-project/
+├── README.md                    # Project documentation
+├── requirements.txt             # Python dependencies
+├── data/
+│   ├── raw/                     # Original dataset
+│   │   ├── data-loader.py       # Script to download dataset
+│   │   ├── X.csv                # Feature data
+│   │   └── y.csv                # Class labels
+│   ├── preprocessed/            # Cleaned and transformed data
+│   └── utils/                   # Data utility scripts
+│       ├── find-min-max.py      # Min-max computation script
+│       ├── scale-data.py        # Data scaling script
+│       └── principal-component-analysis.py  # PCA script
+├── resources/
+│   └── img/                     # Images and figures
+├── results/
+│   └── bitacora/                # Logs and results
+└── src/
+    ├── clustering/              # Clustering algorithms
+    │   ├── kmeans/
+    │   │   └── implementation.py
+    │   ├── agglomerative/
+    │   │   └── implementation.py
+    │   └── dbscan/
+    │       └── implementation.py
+    ├── evaluation/              # Clustering evaluation metrics
+    │   └── evalution-indexes.py
+    ├── preprocessing/           # Data cleaning, normalization, transformation
+    │   └── clean-data.py
+    └── utils/                   # Shared utilities
+        └── utils-for-training.py
+```
 
-results/                 Outputs (plots, metrics, cluster assignments)
-
-src/
-  ├── preprocessing/     Data cleaning, normalization, transformation
-  ├── clustering/        Clustering algorithms
-  │   ├── kmeans/
-  │   ├── agglomerative/
-  │   └── dbscan/
-  ├── evaluation/        Clustering evaluation metrics
-  └── utils/             Shared utilities (e.g., visualization, helpers)
-  ```
-
-  ---
+---
 
 ## Data
 
-In the project directory, the script `data/raw/data-loader.py` is used to download the dataset from the UCI repository for training purposes. This script creates two `csv` files: `X.csv` and `Y.csv` which represent the raw dataset without classfication labels and the classfification labels respectively.
+The data used for unsupervised learning is located in the `data/preprocessed` directory. There are two `csv` file under this directory- the `X_scaled.csv` and `X_PCA.csv`- which were derived from the raw dataset imported from the UCI repository. The first file `X_scaled.csv` contains the resulting dataset after scaling the original one. Before a scaling transformation was applied to the dataset, objects had a large variance between attritubes. This high variance impacts Euclidean distance calculations (all clustering algorithms are distance based). If one attribute varies more, then it dominates the distance. This is clearly seen in the peaks of a waveform - it is going to have a higher variance than all the other 20 attributes. Scaling makes all attributes contribute equally to Euclidean distance calculations, and so all 21 measurements of a waveform are as equally as imporatnt.
+
+The second file `X_PCA.csv` contains the resulting dataset after applying the pricipal component analysis (PCA) technique. PCA transforms high dimensional data (like the 21 features dataset) into a smaller set of uncorrelated variables called principal components, capturing as much variance or unsimilar information as possible. PCA reduces dimensions by ensuring comparibility across features, computing relationship between variables, identifying directions of high variance, sorting by magnitude, and projecting top components with highest variance.
+
+For the purposes of this project, the raw dataset is not used for training. This dataset is located at `data/raw/X.csv`, and the script `data/raw/data-loader.py` is was to download the dataset from the UCI repository. It is worth metioning, that this script not only creates the `X.csv` but also the `Y.csv`, which represents the classfification labels of each tarining object.
