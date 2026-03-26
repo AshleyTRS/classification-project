@@ -131,9 +131,7 @@ classification-project/
 │   │   ├── X_scaled.csv         # Scaled features
 │   │   └── X_PCA.csv            # PCA-transformed features
 │   └── utils/                   # Data utility scripts
-│       ├── find-min-max.py      # Min-max computation script
-│       ├── scale-data.py        # Data scaling script
-│       └── principal-component-analysis.py  # PCA script
+│       └── find-min-max.py      # Min-max computation script
 ├── resources/
 │   └── img/                     # Images and figures
 ├── results/
@@ -143,13 +141,15 @@ classification-project/
     │   ├── kmeans/
     │   │   └── implementation.py
     │   ├── agglomerative/
-    │   │   └── implementation.py
+    │   │   ├── implementation.py
+    │   │   └── add-to-results.py
     │   └── dbscan/
     │       └── implementation.py
     ├── evaluation/              # Clustering evaluation metrics
-    │   └── evalution-indexes.py
+    │   └── indexes.py
     ├── preprocessing/           # Data cleaning, normalization, transformation
-    │   └── clean-data.py
+    │   ├── principal-component-analysis.py
+    │   └── scale-data.py
     └── utils/                   # Shared utilities
         └── utils-for-training.py
 ```
@@ -162,4 +162,14 @@ The data used for unsupervised learning is located in the `data/preprocessed` di
 
 The second file `X_PCA.csv` contains the resulting dataset after applying the pricipal component analysis (PCA) technique. PCA transforms high dimensional data (like the 21 features dataset) into a smaller set of uncorrelated variables called principal components, capturing as much variance or unsimilar information as possible. PCA reduces dimensions by ensuring comparibility across features, computing relationship between variables, identifying directions of high variance, sorting by magnitude, and projecting top components with highest variance.
 
-For the purposes of this project, the raw dataset is not used for training. This dataset is located at `data/raw/X.csv`, and the script `data/raw/data-loader.py` is was to download the dataset from the UCI repository. It is worth metioning, that this script not only creates the `X.csv` but also the `Y.csv`, which represents the classfification labels of each tarining object.
+For the purpose of finding the best partition and haveing a reference model of comparison against other results, the raw dataset is also used for training. This dataset is located at `data/raw/X.csv`, and the script `data/raw/data-loader.py` is was to download the dataset from the UCI repository. It is worth metioning, that this script not only creates the `X.csv` but also the `Y.csv`, which represents the classfification labels of each tarining object.
+
+---
+
+## Classification Algorithms
+
+### K-Means Clustering
+
+### Agglomerative hierarchical clustering
+
+### Density-Based Spatial Clustering of Applications with Noise (DBSCAN)
