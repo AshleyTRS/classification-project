@@ -1,7 +1,13 @@
 import pandas as pd
 import os
-from sklearn.cluster import AgglomerativeClustering
+import sys
 from scipy.cluster.hierarchy import linkage, fcluster
+
+project_root = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..')
+sys.path.insert(0, project_root)
+
+from src.evaluation.indexes import ClusteringEvaluator
+from src.clustering.agglomerative.implementation import AgglomerativeModel
 
 
 def load_data(dataset, location):
@@ -16,18 +22,23 @@ def load_data(dataset, location):
     return X, y
 
 
-def run_agglomerative(X, n_clusters):
-    model = AgglomerativeClustering(n_clusters=n_clusters)
-    return model.fit_predict(X)
+def run_agglomerative(X, n_clusters, dataset, k_num):
+    model = AgglomerativeModel(n_clusters=n_clusters)
+    labels = model.train(X)
+    evaluator = ClusteringEvaluator(X, labels)
+    evaluator.save_results(dataset, k_num)
+    return labels
 
 
-def run_dendrogram_clustering(X):
+def run_dendrogram_clustering(X,  dataset, k_num):
     Z = linkage(X, method='ward')
 
-    # Tchoose threshold create clusters based on distance
+    # Choose threshold create clusters based on distance
     labels = fcluster(Z, t=10, criterion='distance')
 
-    # Make zero-indexed
+    evaluator = ClusteringEvaluator(X, labels)
+    evaluator.save_results(dataset, k_num)
+
     return labels - 1
 
 
@@ -44,9 +55,9 @@ def main():
                 y = y.iloc[:, 0]
 
             # run clustering for dataset
-            labels_k3 = run_agglomerative(X_scaled, 3)
-            labels_k4 = run_agglomerative(X_scaled, 4)
-            labels_dendro = run_dendrogram_clustering(X_scaled)
+            labels_k3 = run_agglomerative(X_scaled, 3, dataset_name, "3")
+            labels_k4 = run_agglomerative(X_scaled, 4, dataset_name, "4")
+            labels_dendro = run_dendrogram_clustering(X_scaled, dataset_name, "dendogram")
 
             # build result dataframe
             results_df = X_scaled.copy()

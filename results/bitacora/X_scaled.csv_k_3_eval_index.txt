@@ -1,0 +1,4 @@
+Evaluation Metrics:
+Davies-Bouldin: 1.7555
+Calinski-Harabasz : 1279.1940
+Silhouette Score: 0.1653
