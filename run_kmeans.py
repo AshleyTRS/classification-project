@@ -1,19 +1,18 @@
 import pandas as pd
 from sklearn.cluster import KMeans
 
-# 📂 Cargar datos escalados
+
 X = pd.read_csv("data/preprocessed/X_scaled.csv")
 
-# ⚙️ Número de clusters
-k = 3  # cámbialo si quieres
 
-# 🤖 Modelo
+k = 4
+
 kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
 
-# 🚀 Entrenar
+
 labels = kmeans.fit_predict(X)
 
-# 📊 Mostrar resultados básicos
+
 print("Clusters asignados:")
 print(labels)
 

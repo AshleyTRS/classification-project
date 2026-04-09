@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.cluster import KMeans
 
-def run_kmeans(k=3):
+def run_kmeans(k=2):
     
     X = pd.read_csv("data/preprocessed/X_scaled.csv")
 
