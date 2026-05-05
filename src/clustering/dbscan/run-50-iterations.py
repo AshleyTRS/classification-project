@@ -118,11 +118,18 @@ def main():
         os.path.dirname(os.path.abspath(__file__)),
         '..', '..', '..', 'results', 'bitacora', 'bitacora-dbscan.xlsx'
     )
+    sheet_name = "iteraciones_50"
+
+    if os.path.exists(output_path):
+        with pd.ExcelFile(output_path, engine="openpyxl") as xls:
+            if sheet_name in xls.sheet_names:
+                existing_df = pd.read_excel(xls, sheet_name=sheet_name)
+                results_df = pd.concat([existing_df, results_df], ignore_index=True)
 
     with pd.ExcelWriter(output_path, engine="openpyxl", mode="a", if_sheet_exists="replace") as writer:
-        results_df.to_excel(writer, sheet_name="iteraciones_50", index=False)
+        results_df.to_excel(writer, sheet_name=sheet_name, index=False)
 
-    print(f"\nResultados guardados en hoja 'iteraciones_50': {output_path}")
+    print(f"\nResultados guardados en hoja '{sheet_name}': {output_path}")
     print(f"\n--- Resumen rápido ---")
     balanced = results_df[
         (results_df["n_clusters"] >= 2) &
