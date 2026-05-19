@@ -33,7 +33,7 @@ def main():
     
     X_scaled = pd.read_csv(scaled_path)
 
-    model = AgglomerativeModel(n_clusters=3)
+    model = AgglomerativeModel(n_clusters=4)
 
     model.train(X_scaled)
     model.print_clusters()

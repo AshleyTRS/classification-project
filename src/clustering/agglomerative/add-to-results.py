@@ -55,7 +55,7 @@ def main():
                 y = y.iloc[:, 0]
 
             # run clustering for dataset
-            labels_k3 = run_agglomerative(X_scaled, 3, dataset_name, "3")
+            labels_k3 = run_agglomerative(X_scaled, 5, dataset_name, "5")
             labels_k4 = run_agglomerative(X_scaled, 4, dataset_name, "4")
             labels_dendro = run_dendrogram_clustering(X_scaled, dataset_name, "dendogram")
 
@@ -63,7 +63,7 @@ def main():
             results_df = X_scaled.copy()
 
             results_df['original_label'] = y
-            results_df['agglo_k3'] = labels_k3
+            results_df['agglo_k5'] = labels_k3
             results_df['agglo_k4'] = labels_k4
             results_df['agglo_dendrogram'] = labels_dendro
 
