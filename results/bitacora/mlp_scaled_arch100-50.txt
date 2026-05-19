@@ -1,0 +1,20 @@
+=== MLP — Red Neuronal Supervisada ===
+Dataset      : scaled
+Arquitectura : (100, 50)
+Exactitud    : 0.8490  (84.90%)
+
+Reporte por clase:
+              precision    recall  f1-score   support
+
+     Clase 0       0.87      0.77      0.82       332
+     Clase 1       0.84      0.87      0.85       329
+     Clase 2       0.85      0.90      0.87       339
+
+    accuracy                           0.85      1000
+   macro avg       0.85      0.85      0.85      1000
+weighted avg       0.85      0.85      0.85      1000
+
+Matriz de confusión:
+[[257  38  37]
+ [ 24 286  19]
+ [ 16  17 306]]
